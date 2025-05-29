@@ -6,22 +6,18 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
-    {
-        Schema::create('historials', function (Blueprint $table) {
+    public function up(): void {
+        Schema::create('historial', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('corte_id')->constrained('cortes')->onDelete('cascade');
+            $table->foreignId('tecnico_id')->constrained('users')->onDelete('cascade');
+            $table->text('observaciones')->nullable();
+            $table->string('estado_final'); // ejecutado o no ejecutado
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
-    {
-        Schema::dropIfExists('historials');
+    public function down(): void {
+        Schema::dropIfExists('historial');
     }
 };
