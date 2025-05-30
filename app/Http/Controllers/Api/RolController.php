@@ -8,25 +8,51 @@ use Illuminate\Http\Request;
 
 class RolController extends Controller
 {
-    public function index() {
-        return Rol::all();
+    public function index()
+    {
+        $roles = Rol::all();
+
+        return response()->json([
+            'message' => 'Lista de roles obtenida correctamente.',
+            'data' => $roles
+        ], 200);
     }
 
-    public function store(Request $request) {
-        return Rol::create($request->all());
+    public function store(Request $request)
+    {
+        $rol = Rol::create($request->all());
+
+        return response()->json([
+            'message' => 'Rol creado correctamente.',
+            'data' => $rol
+        ], 201);
     }
 
-    public function show(Rol $rol) {
-        return $rol;
+    public function show(Rol $rol)
+    {
+        return response()->json([
+            'message' => 'Detalle del rol obtenido correctamente.',
+            'data' => $rol
+        ], 200);
     }
 
-    public function update(Request $request, Rol $rol) {
+    public function update(Request $request, Rol $rol)
+    {
         $rol->update($request->all());
-        return $rol;
+
+        return response()->json([
+            'message' => 'Rol actualizado correctamente.',
+            'data' => $rol
+        ], 200);
     }
 
-    public function destroy(Rol $rol) {
+    public function destroy(Rol $rol)
+    {
         $rol->delete();
-        return response()->noContent();
+
+        return response()->json([
+            'message' => 'Rol eliminado correctamente.',
+            'data' => null
+        ], 200);
     }
 }

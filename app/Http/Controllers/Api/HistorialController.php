@@ -8,25 +8,53 @@ use Illuminate\Http\Request;
 
 class HistorialController extends Controller
 {
- public function index() {
-        return Historial::with(['corte', 'tecnico'])->get();
+    public function index()
+    {
+        $historiales = Historial::with(['corte', 'tecnico'])->get();
+
+        return response()->json([
+            'message' => 'Lista de historiales obtenida correctamente.',
+            'data' => $historiales
+        ], 200);
     }
 
-    public function store(Request $request) {
-        return Historial::create($request->all());
+    public function store(Request $request)
+    {
+        $historial = Historial::create($request->all());
+
+        return response()->json([
+            'message' => 'Historial creado correctamente.',
+            'data' => $historial
+        ], 201);
     }
 
-    public function show(Historial $historial) {
-        return $historial->load(['corte', 'tecnico']);
+    public function show(Historial $historial)
+    {
+        $historial->load(['corte', 'tecnico']);
+
+        return response()->json([
+            'message' => 'Detalle del historial obtenido correctamente.',
+            'data' => $historial
+        ], 200);
     }
 
-    public function update(Request $request, Historial $historial) {
+    public function update(Request $request, Historial $historial)
+    {
         $historial->update($request->all());
-        return $historial;
+
+        return response()->json([
+            'message' => 'Historial actualizado correctamente.',
+            'data' => $historial
+        ], 200);
     }
 
-    public function destroy(Historial $historial) {
+    public function destroy(Historial $historial)
+    {
         $historial->delete();
-        return response()->noContent();
+
+        return response()->json([
+            'message' => 'Historial eliminado correctamente.',
+            'data' => null
+        ], 200);
     }
 }

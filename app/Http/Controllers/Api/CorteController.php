@@ -8,25 +8,53 @@ use Illuminate\Http\Request;
 
 class CorteController extends Controller
 {
-    public function index() {
-        return Corte::with(['zona', 'tecnico'])->get();
+    public function index()
+    {
+        $cortes = Corte::with(['zona', 'tecnico'])->get();
+
+        return response()->json([
+            'message' => 'Lista de cortes obtenida correctamente.',
+            'data' => $cortes
+        ], 200);
     }
 
-    public function store(Request $request) {
-        return Corte::create($request->all());
+    public function store(Request $request)
+    {
+        $corte = Corte::create($request->all());
+
+        return response()->json([
+            'message' => 'Corte creado correctamente.',
+            'data' => $corte
+        ], 201);
     }
 
-    public function show(Corte $corte) {
-        return $corte->load(['zona', 'tecnico', 'evidencias', 'historial']);
+    public function show(Corte $corte)
+    {
+        $corte->load(['zona', 'tecnico', 'evidencias', 'historial']);
+
+        return response()->json([
+            'message' => 'Detalle del corte obtenido correctamente.',
+            'data' => $corte
+        ], 200);
     }
 
-    public function update(Request $request, Corte $corte) {
+    public function update(Request $request, Corte $corte)
+    {
         $corte->update($request->all());
-        return $corte;
+
+        return response()->json([
+            'message' => 'Corte actualizado correctamente.',
+            'data' => $corte
+        ], 200);
     }
 
-    public function destroy(Corte $corte) {
+    public function destroy(Corte $corte)
+    {
         $corte->delete();
-        return response()->noContent();
+
+        return response()->json([
+            'message' => 'Corte eliminado correctamente.',
+            'data' => null
+        ], 200);
     }
 }

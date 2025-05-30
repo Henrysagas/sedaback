@@ -5,30 +5,59 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
- public function index() {
-        return User::with('rol')->get();
+    public function index()
+    {
+        $usuarios = User::with('rol')->get();
+
+        return response()->json([
+            'message' => 'Lista de usuarios obtenida correctamente.',
+            'data' => $usuarios
+        ], 200);
     }
 
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
         $data = $request->all();
         $data['password'] = Hash::make($data['password']);
-        return User::create($data);
+        $usuario = User::create($data);
+
+        return response()->json([
+            'message' => 'Usuario creado correctamente.',
+            'data' => $usuario
+        ], 201);
     }
 
-    public function show(User $user) {
-        return $user->load('rol');
+    public function show(User $user)
+    {
+        $user->load('rol');
+
+        return response()->json([
+            'message' => 'Detalle del usuario obtenido correctamente.',
+            'data' => $user
+        ], 200);
     }
 
-    public function update(Request $request, User $user) {
+    public function update(Request $request, User $user)
+    {
         $user->update($request->except('password'));
-        return $user;
+
+        return response()->json([
+            'message' => 'Usuario actualizado correctamente.',
+            'data' => $user
+        ], 200);
     }
 
-    public function destroy(User $user) {
+    public function destroy(User $user)
+    {
         $user->delete();
-        return response()->noContent();
+
+        return response()->json([
+            'message' => 'Usuario eliminado correctamente.',
+            'data' => null
+        ], 200);
     }
 }

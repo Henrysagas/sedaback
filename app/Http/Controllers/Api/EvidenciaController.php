@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
@@ -10,11 +9,18 @@ use Illuminate\Support\Facades\Storage;
 
 class EvidenciaController extends Controller
 {
-    public function index() {
-        return Evidencia::with('corte')->get();
+    public function index()
+    {
+        $evidencias = Evidencia::with('corte')->get();
+
+        return response()->json([
+            'message' => 'Lista de evidencias obtenida correctamente.',
+            'data' => $evidencias
+        ], 200);
     }
 
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
         $request->validate([
             'foto' => 'required|image|mimes:jpg,jpeg,png|max:2048',
             'corte_id' => 'required|exists:cortes,id',
@@ -22,10 +28,8 @@ class EvidenciaController extends Controller
             'longitud' => 'nullable|numeric',
         ]);
 
-        // Guardar imagen en storage/app/public/evidencias
         $ruta = $request->file('foto')->store('evidencias', 'public');
 
-        // Crear evidencia con la ruta de la imagen
         $evidencia = Evidencia::create([
             'corte_id' => $request->corte_id,
             'foto_url' => $ruta,
@@ -34,22 +38,38 @@ class EvidenciaController extends Controller
         ]);
 
         return response()->json([
-            'mensaje' => 'Evidencia guardada correctamente',
-            'evidencia' => $evidencia
+            'message' => 'Evidencia guardada correctamente.',
+            'data' => $evidencia
         ], 201);
     }
 
-    public function show(Evidencia $evidencia) {
-        return $evidencia->load('corte');
+    public function show(Evidencia $evidencia)
+    {
+        $evidencia->load('corte');
+
+        return response()->json([
+            'message' => 'Detalle de la evidencia obtenido correctamente.',
+            'data' => $evidencia
+        ], 200);
     }
 
-    public function update(Request $request, Evidencia $evidencia) {
+    public function update(Request $request, Evidencia $evidencia)
+    {
         $evidencia->update($request->all());
-        return $evidencia;
+
+        return response()->json([
+            'message' => 'Evidencia actualizada correctamente.',
+            'data' => $evidencia
+        ], 200);
     }
 
-    public function destroy(Evidencia $evidencia) {
+    public function destroy(Evidencia $evidencia)
+    {
         $evidencia->delete();
-        return response()->noContent();
+
+        return response()->json([
+            'message' => 'Evidencia eliminada correctamente.',
+            'data' => null
+        ], 200);
     }
 }

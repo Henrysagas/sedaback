@@ -8,26 +8,51 @@ use Illuminate\Http\Request;
 
 class ZonaController extends Controller
 {
-public function index() {
-        return Zona::all();
+    public function index()
+    {
+        $zonas = Zona::all();
+
+        return response()->json([
+            'message' => 'Lista de zonas obtenida correctamente.',
+            'data' => $zonas
+        ], 200);
     }
 
-    public function store(Request $request) {
-        return Zona::create($request->all());
+    public function store(Request $request)
+    {
+        $zona = Zona::create($request->all());
+
+        return response()->json([
+            'message' => 'Zona creada correctamente.',
+            'data' => $zona
+        ], 201);
     }
 
-    public function show(Zona $zona) {
-        return $zona;
+    public function show(Zona $zona)
+    {
+        return response()->json([
+            'message' => 'Detalle de la zona obtenido correctamente.',
+            'data' => $zona
+        ], 200);
     }
 
-    public function update(Request $request, Zona $zona) {
+    public function update(Request $request, Zona $zona)
+    {
         $zona->update($request->all());
-        return $zona;
+
+        return response()->json([
+            'message' => 'Zona actualizada correctamente.',
+            'data' => $zona
+        ], 200);
     }
 
-    public function destroy(Zona $zona) {
+    public function destroy(Zona $zona)
+    {
         $zona->delete();
-        return response()->noContent();
-    }
 
+        return response()->json([
+            'message' => 'Zona eliminada correctamente.',
+            'data' => null
+        ], 200);
+    }
 }
